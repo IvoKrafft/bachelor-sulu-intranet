@@ -1,0 +1,62 @@
+<?xml version="1.0" ?>
+<template xmlns="http://schemas.sulu.io/template/template"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd">
+
+    <key>ticketProcessing</key>
+
+    <view>pages/ticketProcessing</view>
+    <controller>App\Controller\Website\TicketProcessingController::index</controller>
+    <cacheLifetime>604800</cacheLifetime>
+
+    <meta>
+        <title lang="en">Tickets Processing</title>
+        <title lang="de">Tickets Bearbeitung</title>
+    </meta>
+
+    <properties>
+        <property name="title" type="text_line" mandatory="true">
+            <meta>
+                <title lang="en">Title</title>
+                <title lang="de">Titel</title>
+            </meta>
+            <params>
+                <param name="headline" value="true"/>
+            </params>
+
+            <tag name="sulu.rlp.part"/>
+        </property>
+
+        <property name="url" type="resource_locator" mandatory="true">
+            <meta>
+                <title lang="en">Resourcelocator</title>
+                <title lang="de">Adresse</title>
+            </meta>
+
+            <tag name="sulu.rlp"/>
+        </property>
+
+        <property name="Ticket Type" type="single_select">
+            <meta>
+                <title lang="en">Ticket Type</title>
+                <title lang="de">Ticket Type</title>
+            </meta>
+            <params>
+                <param name="values" type="collection">
+                    <param name="Reparaturen">
+                        <meta>
+                            <title lang="en">Reparaturen</title>
+                            <title lang="de">Reparaturen</title>
+                        </meta>
+                    </param>
+                    <param name="Verwaltung">
+                        <meta>
+                            <title lang="en">Verwaltung</title>
+                            <title lang="de">Verwaltung</title>
+                        </meta>
+                    </param>
+                </param>
+            </params>
+        </property>
+    </properties>
+</template>

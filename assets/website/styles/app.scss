@@ -1,0 +1,52 @@
+@import "theme";
+@import "~bootstrap/scss/bootstrap";
+
+small {
+     font-size: 0.75rem;
+}
+
+.logo {
+     width: 200px;
+}
+
+.list-group > a {
+     gap: 10rem;
+}
+
+.list-group-item-action {
+     &:focus {
+          background-color: transparent;
+     }
+}
+
+.chip {
+     padding: 0.15rem 0.25rem;
+     border-radius: 0.25rem;
+
+     &.Niedrig {
+          color: $info;
+          background-color: rgba($color: $info, $alpha: 0.15);
+     }
+
+     &.Mittel {
+          color: $warning;
+          background-color: rgba($color: $warning, $alpha: 0.15);
+     }
+
+     &.Hoch {
+          color: $danger;
+          background-color: rgba($color: $danger, $alpha: 0.15);
+     }
+}
+
+.info-card {
+     display: flex;
+     gap: 1rem;
+     padding: 0.75rem 1rem;
+     border-radius: 0.25rem;
+     background-color: $gray-200;
+}
+
+td {
+     height: 55px;
+}

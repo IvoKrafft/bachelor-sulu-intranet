@@ -1,0 +1,68 @@
+<?xml version="1.0" ?>
+<template xmlns="http://schemas.sulu.io/template/template"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd">
+
+    <key>revenue</key>
+
+    <view>pages/revenue</view>
+    <controller>App\Controller\Website\ShiftController::index</controller>
+    <cacheLifetime>1209600</cacheLifetime>
+
+    <meta>
+        <title lang="en">revenue</title>
+        <title lang="de">Umsätze</title>
+    </meta>
+
+    <properties>
+        <section name="highlight">
+            <properties>
+                <property name="title" type="text_line" mandatory="true">
+                    <meta>
+                        <title lang="en">Title</title>
+                        <title lang="de">Titel</title>
+                    </meta>
+
+                    <params>
+                        <param name="headline" value="true"/>
+                    </params>
+
+                    <tag name="sulu.rlp.part"/>
+                </property>
+
+                <property name="url" type="resource_locator" mandatory="true">
+                    <meta>
+                        <title lang="en">Resourcelocator</title>
+                        <title lang="de">Adresse</title>
+                    </meta>
+
+                    <tag name="sulu.rlp"/>
+                </property>
+            </properties>
+        </section>
+
+        <section name="Formular">
+            <meta>
+                <title lang="de">Formular</title>
+                <title lang="en">Form</title>
+            </meta>
+            <properties>
+                <property name="fomTitle" type="text_line">
+                    <meta>
+                        <title lang="de">Formular Titel</title>
+                        <title lang="en">Formu titel</title>
+                    </meta>
+                </property>
+                <property name="form" type="single_form_selection">
+                    <meta>
+                        <title lang="de">Formular</title>
+                        <title lang="en">Form</title>
+                    </meta>
+                    <params>
+                        <param name="resourceKey" value="page"/>
+                    </params>
+                </property>
+            </properties>
+        </section>
+    </properties>
+</template>

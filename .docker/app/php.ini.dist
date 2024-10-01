@@ -1,0 +1,15 @@
+#etc/php/php.ini
+display_errors = on
+error_log = /dev/stderr
+access.log = /dev/stderr
+memory_limit = 4G
+
+max_execution_time = 300
+upload_max_filesize = 64M
+max_input_time = 120
+post_max_size = 64M
+
+date.timezone = "Europe/Berlin"
+
+# Special soap config
+soap.wsdl_cache_enabled=0

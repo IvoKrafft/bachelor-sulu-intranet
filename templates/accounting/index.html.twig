@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Kasse{% endblock %}
+
+{% block content %}
+	<div class="container">
+		<div class="d-flex justify-content-between align-items-center mb-5">
+			<h1>Umsatzübersicht</h1>
+			{# Create new accounting entry #}
+			{% if 'ROLE_SULU_FILIALE' in app.user.roles %}
+				<a class="btn btn-primary" href="{{ path('app_accounting_new') }}">
+					<i class="bi bi-plus-lg"></i>
+					Umsatz erfassen
+				</a>
+			{% endif %}
+		</div>
+
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>Filiale</th>
+					<th>Datum</th>
+					<th>Tagesumsatz</th>
+					<th>Anzahl der Kunden</th>
+					<th>Stundenleistung</th>
+					<th>Tagesretouren</th>
+					{% if 'ROLE_SULU_FILIALE' in app.user.roles %}
+						<th></th>
+					{% endif %}
+				</tr>
+			</thead>
+			<tbody>
+			{% for accounting in accountings %}
+				<tr class="align-middle">
+					<td>{{ accounting.user.contact.tags[0] }}</td>
+					<td>{{ accounting.date|date('d.m.Y') }}</td>
+					<td>{{ accounting.sales|number_format(2, ',', '.') }} €</td>
+					<td>{{ accounting.customers }} Kunden</td>
+					<td>
+						{% if accounting.hourlyOutput != null %}
+							{{ accounting.hourlyOutput|number_format(2, ',', '.') }} €/Std.
+						{% else %}
+							/
+						{% endif %}
+					</td>
+					<td>{{ accounting.returns|number_format(2, ',', '.') }} €</td>
+					{% if 'ROLE_SULU_FILIALE' in app.user.roles %}
+						<td class="text-end">
+							<form method="post" action="{{ path('app_accounting_delete', {'id': accounting.id}) }}" onsubmit="return confirm('Möchten Sie diese Umsatzerfassung wirklich löschen?');">
+								<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ accounting.id) }}">
+
+								<div class="btn-group">
+									<a href="{{ path('app_accounting_edit', {'id': accounting.id}) }}" class="btn btn-primary">
+										<i class="bi bi-pencil-square"></i>
+									</a>
+									<button type="submit" class="btn btn-danger">
+										<i class="bi bi-trash3-fill"></i>
+									</button>
+								</div>
+							</form>
+						</td>
+					{% endif %}
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="7">Keine Einträge gefunden</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+
+		<div class="navigation">
+			{{ knp_pagination_render(accountings) }}
+		</div>
+	</div>
+{% endblock %}

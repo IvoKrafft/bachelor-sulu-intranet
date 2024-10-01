@@ -1,0 +1,68 @@
+{% extends "base.html.twig" %}
+
+{% block content %}
+
+    <div class="container">
+        {{ content.article|raw }}
+
+        <div class="mb-5">
+            {# Change heading depending on content.title #}
+            {% if content.title == 'Verwaltung' %}
+                <h1 class="mb-4">Neues Ticket für die Verwaltung erstellen</h1>
+            {% elseif content.title == 'Reparaturen' %}
+                <h1 class="mb-4">Neues Ticket für eine Reparatur erstellen</h1>
+            {% else %}
+                {# Fallback #}
+                <h1 class="mb-4">Neues Ticket erstellen</h1> 
+            {% endif %}
+
+            {% if content.form %}
+                {# FORM THEME #}
+                {% form_theme content.form 'bootstrap_5_layout.html.twig' %}
+                {{ form(content.form) }}
+                {% if app.request.get('send') == 'true' %}
+                    <div class="alert alert-success">
+                        {{ view.form.entity.successText|raw }}
+                    </div>
+                {% endif %}
+
+            {% endif %}
+        </div>
+
+        <div class="mb-5">
+            <h1 class="mb-4">Eingereichte Tickets</h1>
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success">
+                    {{ message }}
+                </div>
+            {% endfor %}
+
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                {% for form in myForm %}
+                    {% if form.typeName == content.title %}
+                        <div class="col">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>Ticket Nr. {{ form.id }}</h3>
+                                    erstellt am {{ form.created|date('d.m.Y H:i') }} Uhr
+                                </div>
+                                <div class="card-body">
+                                    <p>{{ form.data.textarea ?? '' }}</p>
+
+                                    <div class="d-flex gap-2 align-items-center">
+                                        <p class="m-0">Priorität:</p>
+                                        <div class="chip {{ form.data.dropdown }}">{{ form.data.dropdown ?? '' }}</div>
+                                    </div>
+                                    <hr>
+                                    <a class="btn btn-danger"
+                                        href="{{ path('app_ticket_delete',{'id': form.id, 'url': content.title}) }}">Löschen</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

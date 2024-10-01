@@ -1,0 +1,219 @@
+:root {
+     --slot-width: 64px;
+     --hour-slot-width: var(--slot-width);
+     --offset: 110px;
+     --height: auto;
+     --height-sm: 2.5rem;
+     --border-radius: 0.25rem;
+}
+
+p {
+     margin: 0;
+}
+
+.shiftplan {
+     display: flex;
+     flex-direction: column;
+     min-width: calc((17 * var(--slot-width)) + var(--offset));
+}
+
+.day {
+     min-width: var(--offset);
+     max-width: var(--offset);
+     min-height: var(--height);
+     border-right: 1px solid darkgray;
+     padding: 0.25rem;
+}
+
+.time-slot {
+     padding: 0.5rem 0;
+     width: var(--slot-width);
+}
+
+.shift, .vacation {
+     height: var(--height);
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     padding: 0.25rem 0.5rem;
+     border-radius: var(--border-radius);
+}
+
+.shift {
+     position: relative;
+     background-color: lightblue;
+}
+
+.vacation {
+     font-size: 0.9rem;
+     padding: 0.25rem 0.5rem;
+     background-color: lightgrey;
+}
+
+/* Hour start */
+.hour-start-4 {
+     --hour-start: 4;
+}
+
+.hour-start-5 {
+     --hour-start: 5;
+}
+
+.hour-start-6 {
+     --hour-start: 6;
+}
+
+.hour-start-7 {
+     --hour-start: 7;
+}
+
+.hour-start-8 {
+     --hour-start: 8;
+}
+
+.hour-start-9 {
+     --hour-start: 9;
+}
+
+.hour-start-10 {
+     --hour-start: 10;
+}
+
+.hour-start-11 {
+     --hour-start: 11;
+}
+
+.hour-start-12 {
+     --hour-start: 12;
+}
+
+.hour-start-13 {
+     --hour-start: 13;
+}
+
+.hour-start-14 {
+     --hour-start: 14;
+}
+
+.hour-start-15 {
+     --hour-start: 15;
+}
+
+.hour-start-16 {
+     --hour-start: 16;
+}
+
+.hour-start-17 {
+     --hour-start: 17;
+}
+
+.hour-start-18 {
+     --hour-start: 18;
+}
+
+.hour-start-19 {
+     --hour-start: 19;
+}
+
+.hour-start-20 {
+     --hour-start: 20;
+}
+
+.hour-start-21 {
+     --hour-start: 21;
+}
+
+/* Hour duration */
+.hour-duration-0 {
+     --hour-duration: 0;
+}
+
+.hour-duration-1 {
+     --hour-duration: 1;
+}
+
+.hour-duration-2 {
+     --hour-duration: 2;
+}
+
+.hour-duration-3 {
+     --hour-duration: 3;
+}
+
+.hour-duration-4 {
+     --hour-duration: 4;
+}
+
+.hour-duration-5 {
+     --hour-duration: 5;
+}
+
+.hour-duration-6 {
+     --hour-duration: 6;
+}
+
+.hour-duration-7 {
+     --hour-duration: 7;
+}
+
+.hour-duration-8 {
+     --hour-duration: 8;
+}
+
+.hour-duration-9 {
+     --hour-duration: 9;
+}
+
+.hour-duration-10 {
+     --hour-duration: 10;
+}
+
+.hour-duration-11 {
+     --hour-duration: 11;
+}
+
+.hour-duration-12 {
+     --hour-duration: 12;
+}
+
+/* Minute start */
+.minute-start-0 {
+     --minute-start: 0;
+}
+
+.minute-start-15 {
+     --minute-start: 0.25;
+}
+
+.minute-start-30 {
+     --minute-start: 0.5;
+}
+
+.minute-start-45 {
+     --minute-start: 0.75;
+}
+
+/* Minute duration */
+.minute-duration-0 {
+     --minute-duration: 0;
+}
+
+.minute-duration-15 {
+     --minute-duration: 0.25;
+}
+
+.minute-duration-30 {
+     --minute-duration: 0.5;
+}
+
+.minute-duration-45 {
+     --minute-duration: 0.75;
+}
+
+div[class*='hour-start-'][class*='minute-start-'] {
+     transform: translateX(calc((var(--hour-start) + var(--minute-start) - 4) * var(--hour-slot-width)));
+}
+
+div[class*='hour-duration'][class*='minute-duration'] {
+     width: calc(((var(--hour-duration) + var(--minute-duration)) * var(--hour-slot-width)));
+}

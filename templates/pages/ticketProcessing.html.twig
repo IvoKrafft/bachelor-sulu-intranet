@@ -1,0 +1,38 @@
+{% extends "base.html.twig" %}
+
+{% block content %}
+    <div class="container">
+        <h1>{{ content.title }}</h1>
+
+        <h2>Alle Tickets</h2>
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for form in myForm %}
+                <div class="col">
+                    <div class="card">
+                        <div class="card-header">
+                            {% if  form.creator != null %}
+                                <h3>{{ form.creator.username }}</h3>
+                            {% else %}
+                                <h3>Kein User</h3>
+                            {% endif %}
+                        </div>
+                        <div class="card-body">
+                            <h4>Aufgabe</h4>
+                            {{ form.data.textarea ?? '' }}
+                            <h4>Priorität</h4>
+                            {{ form.data.dropdown ?? '' }}
+                            <hr>
+                            <a class="btn btn-danger"
+                               href="{{ path('app_ticket_delete',{'id': form.id, 'url': content.title}) }}">Löschen</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

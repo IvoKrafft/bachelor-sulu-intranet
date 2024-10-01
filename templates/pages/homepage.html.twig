@@ -1,0 +1,15 @@
+{% extends "base.html.twig" %}
+
+{% block content %}
+    <div class="container">
+        <p>Willkommen im Intranet der Bäckerei Schmidt.<p>
+
+        <br>
+
+        {% for neugikeit in content.News %}
+            <h2>{{ neugikeit.headline }}</h2>
+            {{ neugikeit.article|raw }}
+            <hr>
+        {% endfor %}
+    </div>
+{% endblock %}

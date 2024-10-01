@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mehrere neue Schichten im Grundeinsatzplan anlegen{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
+			<ol class="breadcrumb">
+			    <li class="breadcrumb-item"><a href="{{ path('app_shift_index') }}">Grundeinsatzplan</a></li>
+			    <li class="breadcrumb-item active" aria-current="page">Mehere Schichten anlegen</li>
+			</ol>
+		</nav>
+
+        <h1>Mehrere Schichten anlegen</h1>
+        <p class="mb-5">
+            Mit diesem Formular können Sie mehrere Schichten im Grundeinsatzplan gleichzeitig anlegen.<br/>
+            Mittels der Felder <b>Startdatum</b> und <b>Enddatum</b> bestimmen Sie, zwischen welchen Daten die Schichten angelegt werden sollen. Die Schichten werden einschließlich dieser beiden Tage an jedem Tag dazwischen erstellt. Mit <b>Schichtbeginn</b> und <b>Schichtende</b> definieren Sie die Start- und Enduhrzeit einer Schicht an jedem der Tage. Mittels <b>Pausenbeginn</b> und <b>Pausenende</b> wird schließlich die Pause in den Schichten definiert. Am Ende können Sie noch festlegen, für welche <b>Filialen</b> diese Schichten angelegt werden sollen.
+        </p>
+
+        {{ include('shift/_form_batch.html.twig', {'button_label': 'Anlegen'}) }}
+    </div>
+{% endblock %}

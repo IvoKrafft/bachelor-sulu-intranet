@@ -1,0 +1,203 @@
+{% extends 'base.html.twig' %}
+
+{% block style %}
+	{{ parent() }}
+	{{ encore_entry_link_tags('shiftPlan') }}
+{% endblock %}
+
+{% block title %}Schicht{% endblock %}
+
+{% block content %}
+	<div class="container">
+		<div class="d-flex flex-column gap-3 mb-5">
+			<div class="d-flex justify-content-between align-items-center">
+				<h1 class="m-0">Grundeinsatzplan</h1>
+				{# Create new shift #}
+				{% if 'ROLE_SULU_BEZIRKSLEITER' in app.user.roles %}
+					<div>
+						<a class="btn btn-primary" href="{{ path('app_shift_new') }}">
+							<i class="bi bi-plus-lg"></i>
+							Schicht anlegen
+						</a>
+	
+						<a class="btn btn-primary" href="{{ path('app_shift_new_batch') }}">
+							<i class="bi bi-plus-lg"></i>
+							Mehrere Schichten anlegen
+						</a>
+					</div>
+				{% endif %}
+			</div>
+			
+			<div class="d-flex gap-3">
+				{# Branch select #}
+				<select id="branch-select" class="form-select w-auto" aria-label="Branch select" onchange="reloadWithBranch(this)">
+					{% if branches is not empty %}
+						{% for branch in branches %}
+							<option value="{{ branch }}">{{ branch }}</option>
+						{% endfor %}
+					{% else %}
+						<option selected disabled> -- Wähle eine Filiale aus -- </option>
+					{% endif %}
+				</select>
+				{# Weeknumber select #}
+				<select id="weeknumber-select" class="form-select w-auto" aria-label="Weeknumber select" onchange="reloadWithWeekNumber(this)">
+					{% if shiftPlan is not empty %}
+						{% for week in weeks %}
+							<option value="{{ week }}">{{ week }}</option>
+						{% endfor %}
+					{% else %}
+						<option selected disabled> -- Wähle eine KW aus -- </option>
+					{% endif %}
+				</select>
+			</div>
+		</div>
+
+		{# SHIFTPLAN #}
+		<div class="overflow-auto mb-4">
+			<div class="shiftplan">
+				<div class="d-flex flex-row">
+					<div class="day me-3"></div>
+					{% for hour in 4..21 %}
+					<div class="time-slot">{{ hour }}:00</div>
+					{% endfor %}
+				</div>
+	
+				{% set days = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'] %}
+				{% for day in days %}
+					<div class="d-flex flex-row pb-3 pt-3">
+						{% if dates is empty %}
+							<div class="day me-3">{{ day }}</div>
+						{% else %}
+							<div class="day me-3">{{ day }} {{ dates[loop.index-1]|date("d.m.Y") }}</div>
+						{% endif %}
+						<div class="d-flex flex-column gap-2 w-100">
+							{% for key, shifts in shiftPlan.days %}
+								{% if key == day %}
+									{% for shift in shifts|sort((a,b) => a.type == 'Urlaubsanträge') %}
+										{% set interval = 15 %}
+										{% set hourStart = shift.start_at|date('G') %}
+										{% set minuteStart = shift.start_at|date('i') %}
+										{% set duration = shift.end_at.diff(shift.start_at) %}
+										{# Round minute values to fit in css classes #}
+										{% set roundedMinuteStart = ((minuteStart / interval)|round * interval) % 60 %}
+										{% set roundedDurationMinutes = ((duration|date('%i')|round / interval)|round * interval) % 60 %}
+	
+										<div class="hour-start-{{ hourStart }} minute-start-{{ roundedMinuteStart }} hour-duration-{{ duration|date('%h') }} minute-duration-{{ roundedDurationMinutes }} {{ shift.type }}">
+											<div class="d-flex flex-column">
+												{% if shift.employee != null %}
+													<p>{{ shift.employee.lastname }}, {{ shift.employee.firstname }}</p>
+												{% else %}
+													<p>Nicht zugewiesen</p>
+												{% endif %}
+												<small>
+													{% if shift.type == 'shift' %}
+														Schicht: {{ shift.start_at|date('H:i') }} Uhr - {{ shift.end_at|date('H:i') }} Uhr
+													{% else %}
+														Urlaub
+													{% endif %}
+												</small>
+												{% if shift.type == 'shift' %}
+													<small>
+														Pause: {{ shift.break_start_at|date('H:i') }} Uhr - {{ shift.break_end_at|date('H:i') }} Uhr
+													</small>
+												{% endif %}
+											</div>
+											{# Call to action buttons for shifts #}
+											{% if 'ROLE_SULU_BEZIRKSLEITER' in app.user.roles and shift.type == 'shift' %}
+												<form method="post" action="{{ path('app_shift_delete', {'id': shift.id}) }}" onsubmit="return confirm('Möchten Sie diese Schicht wirklich löschen? Falls im Schichtplan eine Mitarbeiterzuordnung erfolgt ist, wird diese auch gelöscht. Dies kann nicht rückgängig gemacht werden.');">
+													<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ shift.id) }}">
+		
+													<div class="btn-group" role="group">
+														<a class="btn btn-primary" href="{{ path('app_shift_edit', {'id': shift.id}) }}">
+															<i class="bi bi-pencil-square"></i>
+														</a>
+														<button type="submit" class="btn btn-danger">
+															<i class="bi bi-trash3-fill"></i>
+														</button>
+													</div>
+												</form>
+											{% elseif 'ROLE_SULU_FILIALE' in app.user.roles and shift.type == 'shift' %}
+												<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#shift-{{ shift.id }}">
+													<i class="bi bi-pencil-square"></i>
+												</button>
+											{% endif %}
+										</div>
+
+										{# Assign shift via modal #}
+										{% if 'ROLE_SULU_FILIALE' in app.user.roles and shift.type == 'shift' %}
+											{{ render(controller('App\\Controller\\ShiftController::editAssignment', { 'id': shift.id })) }}
+										{% endif %}
+									{% endfor %}
+								{% endif %}
+							{% endfor %}
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+		{# END SHIFTPLAN #}
+
+		<div class="info-card">
+			<i class="bi bi-info-circle"></i>
+			<small>
+				Die Arbeit ist durch im voraus feststehende Ruhepausen von mindestens 30 Minuten bei einer Arbeitszeit von mehr als sechs bis zu neun Stunden und 45 Minuten bei einer Arbeitszeit von mehr als neun Stunden insgesamt zu unterbrechen. Die Ruhepausen können in Zeitabschnitte von jeweils mindestens 15 Minuten aufgeteilt werden. Länger als sechs Stunden hintereinander dürfen Arbeitnehmer nicht ohne Ruhepause beschäftigt werden. Die Arbeitnehmer müssen nach Beendigung der täglichen Arbeitszeit eine ununterbrochene Ruhezeit von mindestens elf Stunden haben.
+			</small>
+		</div>
+	</div>
+
+	<script>
+	// Set select value on window load.
+	window.onload = function() {
+		const url = new URL(window.location.href);
+		console.log(url);
+		const kw = url.searchParams.get('kw');
+		const branch = url.searchParams.get('branch');
+		
+		const weeknumberSelect = document.getElementById('weeknumber-select');
+		const branchSelect = document.getElementById('branch-select');
+
+		if (kw) {
+			weeknumberSelect.value = kw;
+		} else {
+			url.searchParams.append('kw', weeknumberSelect.value);
+			weeknumberSelect.value = url.searchParams.get('kw');
+			window.location.href = url.toString();
+		}
+
+		if (branch) {
+			branchSelect.value = branch;
+		} else {
+			url.searchParams.append('branch', branchSelect.value);
+			branchSelect.value = url.searchParams.get('branch');
+			window.location.href = url.toString();
+		}
+	}
+
+	// Add weeknumber qp to url.
+	function reloadWithWeekNumber(selectObject) {
+		var value = selectObject.value;
+		const url = new URL(window.location.href);
+
+		if (url.searchParams.has('kw')) {
+			url.searchParams.set('kw', value);
+		} else {
+			url.searchParams.append('kw', value);
+		}
+		window.location.href = url.toString();
+	}
+
+	function reloadWithBranch(selectObject) {
+		var value = selectObject.value;
+		const url = new URL(window.location.href);
+
+		if (url.searchParams.has('branch')) {
+			url.searchParams.set('branch', value);
+		} else {
+			url.searchParams.append('branch', value);
+		}
+
+		window.location.href = url.toString();
+	}
+	</script>
+	
+{% endblock %}

@@ -1,0 +1,19 @@
+<div class="modal fade" id="shift-{{ shift.id }}" tabindex="-1" aria-labelledby="assigningModalLabel" aria-hidden="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Schicht zuweisen</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {{ form_start(form, { 'action': path('app_shift_edit_assignment', { 'id': shift.id })}) }}
+                    {{ form_widget(form) }}
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-floppy-fill"></i>
+                        {{ button_label|default('Speichern') }}
+                    </button>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>

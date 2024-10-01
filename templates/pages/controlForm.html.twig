@@ -1,0 +1,33 @@
+{% extends "base.html.twig" %}
+
+{% block content %}
+    <div class="container">
+        <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/{{ content.url | split('/')[1] }}">{{ content.url | split('/')[1] | capitalize }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ content.title }}</li>
+            </ol>
+        </nav>
+
+        <h1 class="mb-5">{{ content.title }}</h1>
+
+        {{ content.article|raw }}
+
+        {% if content.form %}
+            {# FORM THEME #}
+            {% form_theme content.form 'bootstrap_5_layout.html.twig' %}
+            {{ form(content.form) }}
+            {% if app.request.get('send') == 'true' %}
+                <div class="alert alert-success">
+                        {{ view.form.entity.successText|raw }}
+                    </div>
+            {% endif %}
+        {% endif %}
+        <br>
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
